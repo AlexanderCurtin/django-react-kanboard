@@ -8,7 +8,7 @@ class Board(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        self.name
+        return self.name
 
 
 class Lane(models.Model):
@@ -16,7 +16,7 @@ class Lane(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
 
     def __str__(self):
-        self.name
+        return self.name
 
 
 class Card(models.Model):
@@ -25,4 +25,4 @@ class Card(models.Model):
     lane = models.ForeignKey(Lane, on_delete=models.CASCADE)
 
     def __str__(self):
-        self.description
+        return self.description
