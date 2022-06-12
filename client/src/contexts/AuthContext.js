@@ -22,7 +22,7 @@ export const AuthContextProvider = (props) => {
     useEffect(() => {
         console.log('heyyyy');
         userManager.getUser().then(user => {
-            if(user.access_token){
+            if(user && user.access_token){
                 console.log(user.access_token);
                 setAuth(user.access_token);
             }
@@ -31,7 +31,7 @@ export const AuthContextProvider = (props) => {
     }, []);
 
     const setUser = (user) => {
-        if(user.access_token){
+        if(user && user.access_token){
             console.log(user.access_token);
             setAuth(user.access_token);
         }
