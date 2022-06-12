@@ -6,7 +6,7 @@ from .models import Board, Lane, Card
 
 # Create your views here.
 class BoardViewSet(viewsets.ModelViewSet):
-    queryset = Board.objects.all().prefetch_related("lane_set").order_by("name")
+    queryset = Board.objects.all().prefetch_related("lane_set").order_by("pk")
     serializer_class = BoardSerializer
 
 
