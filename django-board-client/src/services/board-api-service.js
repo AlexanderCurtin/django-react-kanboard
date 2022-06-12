@@ -4,8 +4,18 @@ const API_ROUTES = {
     LANES: '/api/lanes',
     CARDS: '/api/cards',
 };
+
+let authToken = ''
+const setAuth = (token) => {
+    authToken = token;
+};
 const getBoards = async () => {
-    return await fetch(API_ROUTES.BOARDS).then(x => x.json())
+    return await fetch(API_ROUTES.BOARDS, {
+        headers:{
+            'Content-Type': 'application/json',
+            'Authentication': `Bearer ${authToken}`,
+        },
+    }).then(x => x.json())
 }
 
 const createBoard = async ({name}) => {
@@ -13,7 +23,8 @@ const createBoard = async ({name}) => {
     return await fetch(API_ROUTES.BOARDS + '/', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authentication': `Bearer ${authToken}`,
         },
         body: JSON.stringify({name, lane_set: []})
     })
@@ -21,7 +32,11 @@ const createBoard = async ({name}) => {
 
 const deleteBoard = async({id}) => {
     return await fetch(API_ROUTES.BOARDS + `/${id}/`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authentication': `Bearer ${authToken}`,
+        },
     });
 }
 
@@ -32,18 +47,28 @@ const getPath = (url) => {
 
 const getCard = async (url) => {
     const cardPath = getPath(url);
-    const {description, id, lane} = await fetch(cardPath).then(x => x.json());
+    const {description, id, lane} = await fetch(cardPath,{        headers: {
+        'Content-Type': 'application/json',
+        'Authentication': `Bearer ${authToken}`,
+    },}).then(x => x.json());
     return {description, id, url, lane};
 }
 
 const deleteCard = async (url) => {
     const cardPath = getPath(url);
-    await fetch(cardPath, {method: 'DELETE'});
+    await fetch(cardPath, {method: 'DELETE',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authentication': `Bearer ${authToken}`,
+    }});
 }
 
 const getLane = async (url) => {
     const lanePath = getPath(url);
-    const {name, id, card_set} = await fetch(lanePath).then(x => x.json());
+    const {name, id, card_set} = await fetch(lanePath, {        headers: {
+        'Content-Type': 'application/json',
+        'Authentication': `Bearer ${authToken}`,
+    }}).then(x => x.json());
 
     const cards = await Promise.all(card_set.map(c => getCard(c)));
 
@@ -56,7 +81,12 @@ const getLane = async (url) => {
 }
 
 const getBoard = async (id) => {
-    const boardDetail = await fetch(API_ROUTES.BOARDS + `/${id}`).then(x => x.json());
+    const boardDetail = await fetch(API_ROUTES.BOARDS + `/${id}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authentication': `Bearer ${authToken}`,
+        }
+    }).then(x => x.json());
     const lanes = await Promise.all(boardDetail.lane_set?.map(x => getLane(x)));
     return {
         name: boardDetail.name,
@@ -69,7 +99,8 @@ const moveCard = async(card, laneurl) => {
     await fetch(API_ROUTES.CARDS + `/${card.id}/`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authentication': `Bearer ${authToken}`,
         },
         body: JSON.stringify({lane: laneurl, description: card.description})
     })
@@ -82,7 +113,8 @@ const createOrUpdateCard = async (card) => {
     await fetch(route, {
         method: action,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authentication': `Bearer ${authToken}`,
         },
         body: JSON.stringify({...card})
     })
@@ -95,11 +127,12 @@ const createOrUpdateLane = async (board_id, lane) => {
     await fetch(route, {
         method: action,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authentication': `Bearer ${authToken}`,
         },
         body: JSON.stringify({...lane, board: API_ROUTES.BOARDS + `/${board_id}/`})
     })
 }
 
 
-export {getBoards, createBoard, deleteBoard, getBoard, moveCard, deleteCard, createOrUpdateCard, createOrUpdateLane, getPath}
+export {getBoards, createBoard, deleteBoard, getBoard, moveCard, deleteCard, createOrUpdateCard, createOrUpdateLane, getPath, setAuth}
