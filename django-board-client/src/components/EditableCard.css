@@ -7,7 +7,18 @@
     box-shadow: #2a2a2a 0 2px 0 0 2rem;
     margin-top: 1rem;
     box-shadow: 0 5px 2px #00000070;
-    border-color: solid 2px #CCCCCC;
+    border: solid 2px #CCCCCC;
+}
+
+.deleteable-card.deleteable-card--new {
+    position:relative;
+    background-color: white;
+    color: #2a2a2a;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: none;
+    margin-top: 1rem;
+    border: solid 2px #2a2a2a;
 }
 button.deleteable-card__delete-btn {
     position: absolute;

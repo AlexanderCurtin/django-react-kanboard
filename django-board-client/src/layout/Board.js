@@ -6,7 +6,7 @@ import { deleteCard, getBoard, moveCard, createOrUpdateCard, getPath, createOrUp
 export const Board = (props) => {
     const {id} = useParams();
     console.log(id);
-    const [board, setBoard] = useState({name: 'im bored'});
+    const [board, setBoard] = useState(null);
     const [currentLane, setLane] = useState(null);
     const [sourceVal, setSourceVal] = useState({val: ''});
 
@@ -56,6 +56,9 @@ export const Board = (props) => {
         await createOrUpdateLane(board.id, {name: val, card_set: []});
         await refreshBoard(id);
     }
+    if(!board){
+        return <div>...loading</div>
+    }
 
     return <div className="board">
         <div className="board__title">
@@ -69,7 +72,7 @@ export const Board = (props) => {
                 </div>
                 <div className="lane__card-list">
                     {lane.cards && lane.cards.map(c => (<EditableCard draggable="true" onDragEnd={() => dragEndCallback(idx,c)} onDelete={() => onDeleteCard(idx, c.url)} sourceValue={{val: c.description}} onUpdate={(newVal) => onUpdateCard(newVal, c)} ></EditableCard>))}
-                    <EditableCard draggable="true" sourceValue={sourceVal} onUpdate={(newVal) => onUpdateCard(newVal, {lane: lane.url})} ></EditableCard>
+                    <EditableCard draggable="true" sourceValue={sourceVal} onUpdate={(newVal) => onUpdateCard(newVal, {lane: lane.url})} isNew={true} ></EditableCard>
                 </div>
             </div>
         ))}
