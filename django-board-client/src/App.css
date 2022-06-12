@@ -71,7 +71,7 @@
 
 .board__lane-list {
   display: flex;
-  width: 50rem;
+  min-width: 100rem;
   justify-content: space-between;
   border: solid 2px #61dafb;
   border-radius: 2rem;
@@ -83,6 +83,7 @@
   border-radius: 2rem;
   padding: 2rem;
   width: 100%;
+  max-width: 30rem;
   margin: 2rem;
 }
 

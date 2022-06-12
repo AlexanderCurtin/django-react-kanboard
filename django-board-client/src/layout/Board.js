@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom"
 import { EditableCard } from "../components/EditableCard";
-import { deleteCard, getBoard, moveCard, createOrUpdateCard, getPath } from "../services/board-api-service";
+import { deleteCard, getBoard, moveCard, createOrUpdateCard, getPath, createOrUpdateLane } from "../services/board-api-service";
 
 export const Board = (props) => {
     const {id} = useParams();
@@ -50,6 +50,13 @@ export const Board = (props) => {
         await createOrUpdateCard(newCard).then(() => refreshBoard(id)).then(() => setSourceVal({val: ''}));
     }
 
+    const newLane = useRef();
+    const addNewLane = async () => {
+        const val = newLane.current.textContent;
+        await createOrUpdateLane(board.id, {name: val, card_set: []});
+        await refreshBoard(id);
+    }
+
     return <div className="board">
         <div className="board__title">
             {board.name}
@@ -67,5 +74,8 @@ export const Board = (props) => {
             </div>
         ))}
         </div>
+        <div contentEditable="true" ref={newLane}>New Lane</div>
+        <button value="+" onClick={addNewLane}>Add new lane</button>
+
     </div>
 }

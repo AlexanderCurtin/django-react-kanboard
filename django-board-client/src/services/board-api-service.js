@@ -88,5 +88,18 @@ const createOrUpdateCard = async (card) => {
     })
 }
 
+const createOrUpdateLane = async (board_id, lane) => {
+    const isNew = !lane.id;
+    const route = isNew ? API_ROUTES.LANES + '/' : getPath(lane.url);
+    const action = isNew ? 'POST' : 'PUT';
+    await fetch(route, {
+        method: action,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({...lane, board: API_ROUTES.BOARDS + `/${board_id}/`})
+    })
+}
 
-export {getBoards, createBoard, deleteBoard, getBoard, moveCard, deleteCard, createOrUpdateCard, getPath}
+
+export {getBoards, createBoard, deleteBoard, getBoard, moveCard, deleteCard, createOrUpdateCard, createOrUpdateLane, getPath}
