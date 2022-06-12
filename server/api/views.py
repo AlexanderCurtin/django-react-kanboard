@@ -11,6 +11,9 @@ class BoardViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Board.objects.filter(owner=self.request.user)
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class LanesViewSet(viewsets.ModelViewSet):
     serializer_class = LaneSerializer
@@ -18,9 +21,15 @@ class LanesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Lane.objects.filter(owner=self.request.user)
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class CardsViewSet(viewsets.ModelViewSet):
     serializer_class = CardSerializer
 
     def get_queryset(self):
         return Card.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
