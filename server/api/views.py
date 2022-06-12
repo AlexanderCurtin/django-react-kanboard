@@ -6,15 +6,21 @@ from .models import Board, Lane, Card
 
 # Create your views here.
 class BoardViewSet(viewsets.ModelViewSet):
-    queryset = Board.objects.all().prefetch_related("lane_set").order_by("pk")
     serializer_class = BoardSerializer
+
+    def get_queryset(self):
+        return Board.objects.filter(owner=self.request.user)
 
 
 class LanesViewSet(viewsets.ModelViewSet):
-    queryset = Lane.objects.all().order_by("name")
     serializer_class = LaneSerializer
+
+    def get_queryset(self):
+        return Lane.objects.filter(owner=self.request.user)
 
 
 class CardsViewSet(viewsets.ModelViewSet):
-    queryset = Card.objects.all()
     serializer_class = CardSerializer
+
+    def get_queryset(self):
+        return Card.objects.filter(owner=self.request.user)

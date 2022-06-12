@@ -4,9 +4,9 @@ from . import views
 
 
 router = routers.DefaultRouter()
-router.register(r"boards", views.BoardViewSet)
-router.register(r"lanes", views.LanesViewSet)
-router.register(r"cards", views.CardsViewSet)
+router.register(r"boards", views.BoardViewSet, basename="board")
+router.register(r"lanes", views.LanesViewSet, basename="lane")
+router.register(r"cards", views.CardsViewSet, basename="card")
 
 
 urlpatterns = [

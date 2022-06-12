@@ -13,7 +13,7 @@ const getBoards = async () => {
     return await fetch(API_ROUTES.BOARDS, {
         headers:{
             'Content-Type': 'application/json',
-            'Authentication': `Bearer ${authToken}`,
+            'Authorization': `Bearer ${authToken}`,
         },
     }).then(x => x.json())
 }
@@ -24,7 +24,7 @@ const createBoard = async ({name}) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authentication': `Bearer ${authToken}`,
+            'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({name, lane_set: []})
     })
@@ -35,7 +35,7 @@ const deleteBoard = async({id}) => {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
-            'Authentication': `Bearer ${authToken}`,
+            'Authorization': `Bearer ${authToken}`,
         },
     });
 }
@@ -49,7 +49,7 @@ const getCard = async (url) => {
     const cardPath = getPath(url);
     const {description, id, lane} = await fetch(cardPath,{        headers: {
         'Content-Type': 'application/json',
-        'Authentication': `Bearer ${authToken}`,
+        'Authorization': `Bearer ${authToken}`,
     },}).then(x => x.json());
     return {description, id, url, lane};
 }
@@ -59,7 +59,7 @@ const deleteCard = async (url) => {
     await fetch(cardPath, {method: 'DELETE',
     headers: {
         'Content-Type': 'application/json',
-        'Authentication': `Bearer ${authToken}`,
+        'Authorization': `Bearer ${authToken}`,
     }});
 }
 
@@ -67,7 +67,7 @@ const getLane = async (url) => {
     const lanePath = getPath(url);
     const {name, id, card_set} = await fetch(lanePath, {        headers: {
         'Content-Type': 'application/json',
-        'Authentication': `Bearer ${authToken}`,
+        'Authorization': `Bearer ${authToken}`,
     }}).then(x => x.json());
 
     const cards = await Promise.all(card_set.map(c => getCard(c)));
@@ -84,7 +84,7 @@ const getBoard = async (id) => {
     const boardDetail = await fetch(API_ROUTES.BOARDS + `/${id}`, {
         headers: {
             'Content-Type': 'application/json',
-            'Authentication': `Bearer ${authToken}`,
+            'Authorization': `Bearer ${authToken}`,
         }
     }).then(x => x.json());
     const lanes = await Promise.all(boardDetail.lane_set?.map(x => getLane(x)));
@@ -100,7 +100,7 @@ const moveCard = async(card, laneurl) => {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authentication': `Bearer ${authToken}`,
+            'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({lane: laneurl, description: card.description})
     })
@@ -114,7 +114,7 @@ const createOrUpdateCard = async (card) => {
         method: action,
         headers: {
             'Content-Type': 'application/json',
-            'Authentication': `Bearer ${authToken}`,
+            'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({...card})
     })
@@ -128,7 +128,7 @@ const createOrUpdateLane = async (board_id, lane) => {
         method: action,
         headers: {
             'Content-Type': 'application/json',
-            'Authentication': `Bearer ${authToken}`,
+            'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({...lane, board: API_ROUTES.BOARDS + `/${board_id}/`})
     })
