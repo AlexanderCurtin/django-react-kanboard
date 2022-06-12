@@ -20,7 +20,7 @@ const createBoard = async ({name}) => {
 }
 
 const deleteBoard = async({id}) => {
-    return await fetch(API_ROUTES.BOARDS + `/${id}`, {
+    return await fetch(API_ROUTES.BOARDS + `/${id}/`, {
         method: 'DELETE'
     });
 }
@@ -32,8 +32,13 @@ const getPath = (url) => {
 
 const getCard = async (url) => {
     const cardPath = getPath(url);
-    const {description, id} = await fetch(cardPath).then(x => x.json());
-    return {description, id};
+    const {description, id, lane} = await fetch(cardPath).then(x => x.json());
+    return {description, id, url, lane};
+}
+
+const deleteCard = async (url) => {
+    const cardPath = getPath(url);
+    await fetch(cardPath, {method: 'DELETE'});
 }
 
 const getLane = async (url) => {
@@ -70,4 +75,18 @@ const moveCard = async(card, laneurl) => {
     })
 }
 
-export {getBoards, createBoard, deleteBoard, getBoard, moveCard}
+const createOrUpdateCard = async (card) => {
+    const isNew = !card.id;
+    const route = isNew ? API_ROUTES.CARDS + '/' : getPath(card.url);
+    const action = isNew ? 'POST' : 'PUT';
+    await fetch(route, {
+        method: action,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({...card})
+    })
+}
+
+
+export {getBoards, createBoard, deleteBoard, getBoard, moveCard, deleteCard, createOrUpdateCard, getPath}

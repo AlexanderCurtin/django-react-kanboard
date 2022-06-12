@@ -14,14 +14,14 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #FFFFFF;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #222222;
 }
 
 .App-link {
@@ -82,6 +82,8 @@
   border: solid 2px #61dafb;
   border-radius: 2rem;
   padding: 2rem;
+  width: 100%;
+  margin: 2rem;
 }
 
 .lane__title {

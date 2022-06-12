@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
-import { getBoard, moveCard } from "../services/board-api-service";
+import { EditableCard } from "../components/EditableCard";
+import { deleteCard, getBoard, moveCard, createOrUpdateCard, getPath } from "../services/board-api-service";
 
 export const Board = (props) => {
     const {id} = useParams();
     console.log(id);
     const [board, setBoard] = useState({name: 'im bored'});
     const [currentLane, setLane] = useState(null);
+    const [sourceVal, setSourceVal] = useState({val: ''});
 
 
     useEffect(() => {
@@ -24,6 +26,29 @@ export const Board = (props) => {
         console.log(id);
         setLane(id);
     }
+    const refreshBoard = async (id) => {
+        const newBoard = await getBoard(id);
+        await setBoard(newBoard);
+    }
+
+    const onDeleteCard = async (lane_idx, url) => {
+        await deleteCard(url);
+        const lane = board.lanes[lane_idx];
+        console.log(lane.cards);
+        lane.cards = lane.cards.filter(c => getPath(c.url) !== getPath(url));
+        setBoard({...board});
+        const newBoard = await getBoard(id);
+        await setBoard(newBoard);
+    }
+
+    const onUpdateCard = async (newVal, c) => {
+        if(newVal.trim() === ''){
+            return;
+        }
+        console.log(newVal);
+        const newCard = {...c, description: newVal};
+        await createOrUpdateCard(newCard).then(() => refreshBoard(id)).then(() => setSourceVal({val: ''}));
+    }
 
     return <div className="board">
         <div className="board__title">
@@ -36,7 +61,8 @@ export const Board = (props) => {
                     {lane.name}
                 </div>
                 <div className="lane__card-list">
-                    {lane.cards && lane.cards.map(c => (<div className="lane__card" draggable="true" onDragEnd={() => dragEndCallback(idx,c)}>{c.description}</div>))}
+                    {lane.cards && lane.cards.map(c => (<EditableCard draggable="true" onDragEnd={() => dragEndCallback(idx,c)} onDelete={() => onDeleteCard(idx, c.url)} sourceValue={{val: c.description}} onUpdate={(newVal) => onUpdateCard(newVal, c)} ></EditableCard>))}
+                    <EditableCard draggable="true" sourceValue={sourceVal} onUpdate={(newVal) => onUpdateCard(newVal, {lane: lane.url})} ></EditableCard>
                 </div>
             </div>
         ))}
