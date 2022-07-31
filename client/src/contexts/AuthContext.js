@@ -2,12 +2,15 @@ import React, {useEffect, useState} from 'react';
 import {UserManager} from 'oidc-client-ts';
 import { useNavigate } from 'react-router-dom';
 import { setAuth } from '../services/board-api-service';
+const redirect_uri = `${window.origin}/callback`;
+console.log(redirect_uri);
 const userManager = new UserManager({
     authority: 'https://dev-a--80hrm.us.auth0.com/',
     client_id: 'ewXo5g3X5uEN2ZtxPQAyeBYWVDVBMlBK',
-    redirect_uri: 'http://localhost:3000/callback',
+    redirect_uri: redirect_uri,
     scope: 'openid profile email'
 });
+console.log(userManager);
 export const AuthContext = React.createContext({
     user: null, loaded: false
 });
